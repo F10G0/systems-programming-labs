@@ -10,7 +10,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 .
 ├── README.md
 ├── task00-sort
-└── task01-system-calls
+├── task01-syscalls
+└── task02-fileio
 ```
 
 ---
@@ -26,13 +27,25 @@ This repository contains solutions for the **Systems Programming** practical cou
 
 ---
 
-### task01-system-calls
+### task01-syscalls
 
 - System call wrappers using `syscall()`
 - Direct syscall invocation via inline assembly
 - Minimal syscall tracer using `ptrace()`
 
-➡️ See: `task01-system-calls/`
+➡️ See: `task01-syscalls/`
+
+---
+
+### task02-fileio
+
+- In-memory filesystem implemented using FUSE
+- Supports hierarchical files and directories
+- Read / write / append operations
+- Symbolic links and filesystem statistics
+- Log-based crash recovery (operation replay)
+
+➡️ See: `task02-fileio/`
 
 ---
 
