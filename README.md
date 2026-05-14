@@ -11,7 +11,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 ├── README.md
 ├── task00-sort
 ├── task01-syscalls
-└── task02-fileio
+├── task02-fileio
+└── task03-processes
 ```
 
 ---
@@ -46,6 +47,22 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Log-based crash recovery (operation replay)
 
 ➡️ See: `task02-fileio/`
+
+---
+
+### task03-processes
+
+- Unix-like shell implementation
+- Multi-stage pipeline execution using `pipe`
+- Input / output redirection
+- Background process execution
+- Builtin process management commands:
+  - `wait`
+  - `kill`
+  - `exit`
+- Flex/Bison-based command parser
+
+➡️ See: `task03-processes/`
 
 ---
 
