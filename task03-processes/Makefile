@@ -1,36 +1,31 @@
 CC ?= cc
-CFLAGS ?= -g -Wall -O2
-CFLAGS += -Iparser
-LDFLAGS ?=
+CFLAGS ?= -g -Wall -O2 -Iparser
+LDFLAGS ?= -pthread
 
 YACC ?= bison
-LEX ?= flex
+LEX = flex
 YFLAGS += -d -t -v -b y
 
-SRC = \
-	src/main.c \
-	src/execute.c \
-	parser/parse.c \
-	parser/scan.c
-
+SRC = parser/parse.c parser/scan.c src/main.c src/execute.c
 OBJ = $(SRC:.c=.o)
 
 LIBS = -lfl
 
 all: shell
 
+parser/parse.c: parser/parse.y
+	cd parser && $(YACC) $(YFLAGS) parse.y
+	mv parser/y.tab.c parser/parse.c
+
+parser/scan.c: parser/scan.l parser/parse.c
+	cd parser && $(LEX) -o scan.c scan.l
+
 shell: $(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
-
-parser/parse.c parser/parse.h: parser/parse.y
-	$(YACC) $(YFLAGS) -o parser/parse.c parser/parse.y
-
-parser/scan.c: parser/scan.l parser/parse.h
-	$(LEX) -o parser/scan.c parser/scan.l
+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 clean:
-	rm -f $(OBJ)
-	rm -f parser/parse.c parser/parse.h parser/scan.c parser/y.output
+	rm -f src/*.o parser/*.o
+	rm -f parser/parse.c parser/scan.c parser/y.tab.c parser/y.tab.h parser/y.output
 	rm -f shell
 
 .PHONY: all clean
