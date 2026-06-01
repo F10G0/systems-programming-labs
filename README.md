@@ -12,7 +12,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 ├── task00-sort
 ├── task01-syscalls
 ├── task02-fileio
-└── task03-processes
+├── task03-processes
+└── task04-concurrency
 ```
 
 ---
@@ -63,6 +64,17 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Flex/Bison-based command parser
 
 ➡️ See: `task03-processes/`
+
+---
+
+### task04-concurrency
+
+- Spinlock implementation using C11 atomics
+- Lock-based hashmap with per-bucket locking
+- Lock-free hashmap using compare-and-swap (CAS)
+- Logical deletion and physical unlinking
+
+➡️ See: `task04-concurrency/`
 
 ---
 
