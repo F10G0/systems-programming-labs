@@ -15,7 +15,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 ├── task03-processes
 ├── task04-concurrency
 ├── task05-memory
-└── task06-sockets
+├── task06-sockets
+└── task07-llvm
 ```
 
 ---
@@ -104,6 +105,16 @@ This repository contains solutions for the **Systems Programming** practical cou
 ➡️ See: `task06-sockets/`
 
 ---
+
+### task07-llvm
+
+- LLVM dead code elimination pass
+- Removal of trivially dead instructions, redundant branches, and simple dead stores
+- Runtime instrumentation for heap and stack memory accesses
+- Detection of out-of-bounds accesses and use-after-free
+- Ordered allocation tracking for efficient address lookup
+
+➡️ See: `task07-llvm/`
 
 ## Build
 
