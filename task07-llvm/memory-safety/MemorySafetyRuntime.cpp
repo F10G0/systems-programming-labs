@@ -1,6 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
-
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -97,5 +94,3 @@ void __runtime_free(void *ptr) {
 }
 
 }
-
-#pragma clang diagnostic pop
