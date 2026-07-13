@@ -13,7 +13,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 ├── task01-syscalls
 ├── task02-fileio
 ├── task03-processes
-└── task04-concurrency
+├── task04-concurrency
+└── task05-memory-management
 ```
 
 ---
@@ -75,6 +76,18 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Logical deletion and physical unlinking
 
 ➡️ See: `task04-concurrency/`
+
+---
+
+### task05-memory-management
+
+- Custom implementations of `malloc`, `calloc`, `realloc`, and `free`
+- First-fit allocation with block splitting and coalescing
+- Multiple cache-line-aligned arenas with per-arena locking
+- Thread-local arena assignment
+- Contention-sensitive heap reservation
+
+➡️ See: `task05-memory-management/`
 
 ---
 
