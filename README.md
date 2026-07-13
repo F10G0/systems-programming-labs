@@ -14,7 +14,8 @@ This repository contains solutions for the **Systems Programming** practical cou
 ├── task02-fileio
 ├── task03-processes
 ├── task04-concurrency
-└── task05-memory-management
+├── task05-memory
+└── task06-sockets
 ```
 
 ---
@@ -79,7 +80,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 
 ---
 
-### task05-memory-management
+### task05-memory
 
 - Custom implementations of `malloc`, `calloc`, `realloc`, and `free`
 - First-fit allocation with block splitting and coalescing
@@ -87,7 +88,20 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Thread-local arena assignment
 - Contention-sensitive heap reservation
 
-➡️ See: `task05-memory-management/`
+➡️ See: `task05-memory/`
+
+---
+
+### task06-sockets
+
+- Multithreaded TCP client-server application
+- Protocol Buffers message serialization
+- Length-prefixed message framing over TCP
+- Fixed server worker pool with round-robin connection assignment
+- I/O multiplexing using `poll()`
+- Atomic shared counter with `ADD`, `SUB`, and `TERMINATION` operations
+
+➡️ See: `task06-sockets/`
 
 ---
 
