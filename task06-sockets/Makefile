@@ -1,24 +1,39 @@
 CXX ?= c++
 CXXFLAGS ?= -g -Wall -O2 -std=c++17
-PROTOBUF_FLAGS := $(shell pkg-config --cflags --libs protobuf)
-LDLIBS := $(PROTOBUF_FLAGS) -lpthread
+CPPFLAGS += $(shell pkg-config --cflags protobuf)
+LDLIBS += $(shell pkg-config --libs protobuf) -pthread
+
+BUILD_DIR ?= build
+GEN_DIR := $(BUILD_DIR)/generated
+PROTO_FILE := proto/message.proto
+PROTO_CC := $(GEN_DIR)/message.pb.cc
+PROTO_H := $(GEN_DIR)/message.pb.h
+
+LIBRARY := $(BUILD_DIR)/libutils.so
+SERVER := $(BUILD_DIR)/server
+CLIENT := $(BUILD_DIR)/client
 
 .PHONY: all clean
 
-all: libutils.so server client
+all: $(LIBRARY) $(SERVER) $(CLIENT)
 
-message.pb.cc: message.proto
-	protoc --cpp_out=. $<
+$(PROTO_CC) $(PROTO_H) &: $(PROTO_FILE) | $(GEN_DIR)
+	protoc --proto_path=proto --cpp_out=$(GEN_DIR) $<
 
-libutils.so: utils.cpp utils.h message.pb.cc
-	$(CXX) $(CXXFLAGS) -shared -fPIC -o $@ utils.cpp message.pb.cc $(LDLIBS)
+$(LIBRARY): src/utils.cpp include/utils.h $(PROTO_CC) $(PROTO_H) | $(BUILD_DIR)
+	$(CXX) $(CPPFLAGS) -Iinclude -I$(GEN_DIR) $(CXXFLAGS) -shared -fPIC \
+		-o $@ src/utils.cpp $(PROTO_CC) $(LDLIBS)
 
-server: server.cpp utils.h libutils.so
-	$(CXX) $(CXXFLAGS) -o $@ server.cpp -L. -Wl,-rpath=. -lutils $(LDLIBS)
+$(SERVER): src/server.cpp include/utils.h $(LIBRARY) | $(BUILD_DIR)
+	$(CXX) $(CPPFLAGS) -Iinclude -I$(GEN_DIR) $(CXXFLAGS) \
+		-o $@ src/server.cpp -L$(BUILD_DIR) -Wl,-rpath,'$$ORIGIN' -lutils $(LDLIBS)
 
-client: client.cpp utils.h libutils.so
-	$(CXX) $(CXXFLAGS) -o $@ client.cpp -L. -Wl,-rpath=. -lutils $(LDLIBS)
+$(CLIENT): src/client.cpp include/utils.h $(LIBRARY) | $(BUILD_DIR)
+	$(CXX) $(CPPFLAGS) -Iinclude -I$(GEN_DIR) $(CXXFLAGS) \
+		-o $@ src/client.cpp -L$(BUILD_DIR) -Wl,-rpath,'$$ORIGIN' -lutils $(LDLIBS)
+
+$(GEN_DIR) $(BUILD_DIR):
+	mkdir -p $@
 
 clean:
-	$(RM) server client libutils.so message.pb.cc message.pb.h
-	
+	$(RM) -r $(BUILD_DIR)

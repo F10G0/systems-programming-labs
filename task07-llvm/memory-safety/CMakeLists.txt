@@ -25,7 +25,7 @@ endif ()
 
 # Build the instrumentation pass as a loadable shared library.
 add_library(MemorySafety SHARED
-    MemorySafety.cpp
+    src/MemorySafety.cpp
 )
 
 # LLVM symbols are resolved when the plugin is loaded by opt.
@@ -35,5 +35,5 @@ target_link_libraries(MemorySafety
 
 # Build the runtime support code as a static library.
 add_library(MemorySafetyRuntimeCPP STATIC
-    MemorySafetyRuntime.cpp
+    src/MemorySafetyRuntime.cpp
 )

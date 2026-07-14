@@ -8,16 +8,33 @@ This repository contains solutions for the **Systems Programming** practical cou
 
 ```text
 .
+├── .gitignore
+├── Makefile
 ├── README.md
-├── task00-sort
-├── task01-syscalls
-├── task02-fileio
-├── task03-processes
-├── task04-concurrency
-├── task05-memory
-├── task06-sockets
-└── task07-llvm
+├── task00-sort/
+├── task01-syscalls/
+├── task02-fileio/
+├── task03-processes/
+├── task04-concurrency/
+├── task05-memory/
+├── task06-sockets/
+└── task07-llvm/
 ```
+
+---
+
+## Task Matrix
+
+| Task | Topic | Primary output | Key requirements |
+| --- | --- | --- | --- |
+| [Task 00](task00-sort/README.md) | External sorting | `task00-sort/build/sort` | C++17, POSIX |
+| [Task 01](task01-syscalls/README.md) | System calls and tracing | Libraries and tracer under `task01-syscalls/build/` | Linux x86-64, `ptrace` |
+| [Task 02](task02-fileio/README.md) | In-memory FUSE filesystem | `task02-fileio/build/memfs` | FUSE 2.x, `/dev/fuse` |
+| [Task 03](task03-processes/README.md) | Shell and process management | `task03-processes/build/shell` | Flex, Bison, `libfl` |
+| [Task 04](task04-concurrency/README.md) | Concurrent data structures | Libraries under `task04-concurrency/build/` | C11 atomics |
+| [Task 05](task05-memory/README.md) | Custom allocator | `task05-memory/build/libmymalloc.so` | GNU11, pthreads, `sbrk()` |
+| [Task 06](task06-sockets/README.md) | TCP and Protocol Buffers | Programs and library under `task06-sockets/build/` | C++17, Protobuf, `protoc` |
+| [Task 07](task07-llvm/README.md) | LLVM passes | Plugins and runtime under `task07-llvm/build/` | LLVM/Clang 16, CMake, Ninja |
 
 ---
 
@@ -28,7 +45,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - External sort implementation under memory constraints
 - Supports ascending and reverse order (`-r`)
 
-➡️ See: `task00-sort/`
+See [task00-sort](task00-sort/README.md).
 
 ---
 
@@ -38,7 +55,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Direct syscall invocation via inline assembly
 - Minimal syscall tracer using `ptrace()`
 
-➡️ See: `task01-syscalls/`
+See [task01-syscalls](task01-syscalls/README.md).
 
 ---
 
@@ -50,7 +67,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Symbolic links and filesystem statistics
 - Log-based crash recovery (operation replay)
 
-➡️ See: `task02-fileio/`
+See [task02-fileio](task02-fileio/README.md).
 
 ---
 
@@ -66,7 +83,7 @@ This repository contains solutions for the **Systems Programming** practical cou
   - `exit`
 - Flex/Bison-based command parser
 
-➡️ See: `task03-processes/`
+See [task03-processes](task03-processes/README.md).
 
 ---
 
@@ -77,7 +94,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Lock-free hashmap using compare-and-swap (CAS)
 - Logical deletion and physical unlinking
 
-➡️ See: `task04-concurrency/`
+See [task04-concurrency](task04-concurrency/README.md).
 
 ---
 
@@ -89,7 +106,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Thread-local arena assignment
 - Contention-sensitive heap reservation
 
-➡️ See: `task05-memory/`
+See [task05-memory](task05-memory/README.md).
 
 ---
 
@@ -102,7 +119,7 @@ This repository contains solutions for the **Systems Programming** practical cou
 - I/O multiplexing using `poll()`
 - Atomic shared counter with `ADD`, `SUB`, and `TERMINATION` operations
 
-➡️ See: `task06-sockets/`
+See [task06-sockets](task06-sockets/README.md).
 
 ---
 
@@ -114,24 +131,38 @@ This repository contains solutions for the **Systems Programming** practical cou
 - Detection of out-of-bounds accesses and use-after-free
 - Ordered allocation tracking for efficient address lookup
 
-➡️ See: `task07-llvm/`
+See [task07-llvm](task07-llvm/README.md).
 
 ## Build
 
-Each task is self-contained.
-
-Example:
+Build every assignment from the repository root:
 
 ```bash
-cd task00-sort
 make
+```
+
+Build one assignment by using its directory name as the target:
+
+
+```bash
+make task00-sort
+```
+
+The task Makefiles remain independently usable, for example `make -C task00-sort`.
+All generated files are placed under the corresponding task's `build/` directory.
+Build requirements differ by task; consult the task README before building.
+
+Remove every generated build directory with:
+
+```bash
+make clean
 ```
 
 ---
 
 ## Usage
 
-Refer to the README inside each task directory for details.
+Refer to the linked task README for exact commands, arguments, outputs, and limitations.
 
 ---
 
@@ -139,4 +170,6 @@ Refer to the README inside each task directory for details.
 
 - Target platform: Linux x86-64
 - Languages: C / C++
-- Each task is independent and can be built separately
+- Each task is independent and can be built separately.
+- Source files live under `src/`, public headers under `include/`, protocol definitions under `proto/`, and supplementary material under `examples/` or `docs/` where applicable.
+- Generated files are confined to task-local `build/` directories and are not tracked.

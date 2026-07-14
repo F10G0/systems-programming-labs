@@ -1,4 +1,4 @@
-# task00-sort — External Sort Implementation
+# Task 00 — External Sort
 
 ## Overview
 
@@ -12,7 +12,7 @@ This task implements a simplified version of Unix `sort(1)` with support for:
 This implementation follows a standard external sorting pipeline:  
 **run generation (chunking) + k-way merge**.
 
-### Technical Focus
+## Design
 
 This implementation addresses sorting under memory constraints using an **external sorting strategy**:
 
@@ -21,7 +21,14 @@ This implementation addresses sorting under memory constraints using an **extern
 
 This approach is commonly used in real-world systems for large-scale data processing.
 
-For detailed algorithmic explanation, see `sort.pdf`.
+## Requirements
+
+- Linux or another POSIX-like environment
+- GNU Make
+- A C++17-compatible compiler
+- Sufficient temporary-file space for inputs larger than memory
+
+For a detailed algorithmic explanation, see `docs/sort.pdf`.
 
 ---
 
@@ -31,21 +38,21 @@ For detailed algorithmic explanation, see `sort.pdf`.
 task00-sort/
 ├── Makefile
 ├── README.md
-├── sort.cpp
-├── sort_annotated.cpp
-└── sort.pdf
+├── src/
+│   └── sort.cpp
+├── examples/
+│   └── sort_annotated.cpp
+└── docs/
+    └── sort.pdf
 ```
 
 ### Files
 
-- **sort.cpp**  
-  Main implementation using external sort (chunking + k-way merge)
+- **src/sort.cpp**: Main implementation using external sort (chunking + k-way merge)
 
-- **sort_annotated.cpp**  
-  Same implementation with detailed inline comments for learning purposes
+- **examples/sort_annotated.cpp**: Same implementation with detailed inline comments for learning purposes
 
-- **sort.pdf**  
-  Full explanation of the algorithm:
+- **docs/sort.pdf**: Full explanation of the algorithm:
   - external sorting
   - memory constraints
   - k-way merge
@@ -59,24 +66,43 @@ task00-sort/
 ## Build
 
 ```bash
-make
+make -C task00-sort
 ```
 
----
+The generated executable is `task00-sort/build/sort`.
 
 ## Usage
 
 Basic:
 
 ```bash
-./sort < input.txt
+./build/sort < input.txt
 ```
 
 Reverse order:
 
 ```bash
-./sort -r < input.txt
+./build/sort -r < input.txt
 ```
+
+Run these commands from `task00-sort`. From the repository root, use `task00-sort/build/sort`.
+
+## Cleanup
+
+```bash
+make -C task00-sort clean
+```
+
+## Limitations
+
+- Memory accounting is approximate rather than allocator-accurate.
+- Every temporary run remains open during the merge, so extremely large inputs may reach the process file-descriptor limit.
+- Temporary-run I/O uses C-string operations and therefore does not preserve embedded NUL bytes.
+
+## Troubleshooting
+
+- A `tmpfile()` failure usually indicates insufficient temporary storage or an operating-system resource limit.
+- A premature failure on very large input may require increasing the open-file limit or implementing multi-pass merging.
 
 ---
 

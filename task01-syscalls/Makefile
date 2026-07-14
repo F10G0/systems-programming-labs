@@ -1,14 +1,26 @@
 CC ?= cc
 CFLAGS ?= -g -Wall -O2
 
-.PHONY: all
+BUILD_DIR ?= build
+WRAPPER := $(BUILD_DIR)/librw_wrapper.so
+ASM_WRAPPER := $(BUILD_DIR)/librw_asm.so
+TRACER := $(BUILD_DIR)/tracer
 
-all: librw_wrapper.so librw_asm.so tracer
-librw_wrapper.so: syscall_wrapper.c
+.PHONY: all clean
+
+all: $(WRAPPER) $(ASM_WRAPPER) $(TRACER)
+
+$(WRAPPER): src/syscall_wrapper.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $<
 
-librw_asm.so: syscall_asm.c
+$(ASM_WRAPPER): src/syscall_asm.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $<
 
-tracer: syscall_tracer.c
+$(TRACER): src/syscall_tracer.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
+
+$(BUILD_DIR):
+	mkdir -p $@
+
+clean:
+	$(RM) -r $(BUILD_DIR)

@@ -25,7 +25,7 @@ endif ()
 
 # Build the LLVM pass as a loadable shared library.
 add_library(DeadCodeElimination SHARED
-    DeadCodeElimination.cpp
+    src/DeadCodeElimination.cpp
 )
 
 # LLVM symbols are resolved when the plugin is loaded by opt.

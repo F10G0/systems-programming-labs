@@ -1,0 +1,32 @@
+# Local audit and validation files
+/audit-tests/
+
+# Unified per-assignment build directories
+/task*/build/
+
+# Compiler and linker outputs outside the standard build directories
+*.o
+*.obj
+*.a
+*.so
+*.d
+*.gcda
+*.gcno
+
+# Other generated build metadata
+/compile_commands.json
+
+# Runtime artifacts
+/task02-fileio/log
+core
+core.*
+*.log
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.idea/
+.vscode/

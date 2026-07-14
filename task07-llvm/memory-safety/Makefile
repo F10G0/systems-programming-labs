@@ -1,5 +1,5 @@
 LLVM_DIR ?= /usr/lib/llvm-16
-BUILD_DIR := build
+BUILD_DIR ?= ../build/memory-safety
 
 RUNTIME_SOURCE := $(BUILD_DIR)/libMemorySafetyRuntimeCPP.a
 RUNTIME_FINAL := $(BUILD_DIR)/libMemorySafetyRuntime.a
@@ -19,5 +19,4 @@ runtime: cmake-build
 	cp $(RUNTIME_SOURCE) $(RUNTIME_FINAL)
 
 clean:
-	rm -rf $(BUILD_DIR)
-	
+	$(RM) -r $(BUILD_DIR)

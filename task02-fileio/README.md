@@ -1,4 +1,6 @@
-# Task02 - memfs (In-Memory Filesystem using FUSE)
+# Task 02 — In-Memory FUSE Filesystem
+
+## Overview
 
 A simple **in-memory filesystem** implemented using FUSE.  
 This project demonstrates how filesystem operations are mapped to internal data structures and how basic crash recovery can be implemented in user space.
@@ -13,6 +15,13 @@ This project demonstrates how filesystem operations are mapped to internal data 
 - Filesystem statistics (`statfs`)
 - Crash recovery via log replay
 - Pure user-space filesystem (no kernel modification)
+
+## Requirements
+
+- Linux with FUSE support and access to `/dev/fuse`
+- FUSE 2.x development headers and library (`FUSE_USE_VERSION 26`)
+- GNU Make and a C compiler
+- `fusermount` for unmounting
 
 ---
 
@@ -34,18 +43,18 @@ The filesystem is structured into three main components:
 
 ## Repository Structure
 
-```
-.
+```text
+task02-fileio/
+├── Makefile
+├── README.md
 ├── src/        # Core implementation
 │   ├── memfs.c
-│   ├── inode.c / inode.h
-│   ├── log.c / log.h
-│
-├── examples/   # Annotated reference version
-│   └── memfs_single_annotated.c
-│
-├── Makefile
-└── README.md
+│   ├── inode.c
+│   ├── inode.h
+│   ├── log.c
+│   └── log.h
+└── examples/   # Annotated reference version
+    └── memfs_single_annotated.c
 ```
 
 ---
@@ -53,16 +62,16 @@ The filesystem is structured into three main components:
 ## Build
 
 ```bash
-make
+make -C task02-fileio
 ```
 
----
+The generated executable is `task02-fileio/build/memfs`.
 
 ## Usage
 
 ```bash
 mkdir /tmp/mnt
-./memfs /tmp/mnt
+./build/memfs /tmp/mnt
 ```
 
 Example:
@@ -80,13 +89,21 @@ Unmount:
 fusermount -u /tmp/mnt
 ```
 
+## Cleanup
+
+Ensure the filesystem is unmounted before cleaning generated files:
+
+```bash
+make -C task02-fileio clean
+```
+
 ---
 
 ## Assignment Requirements Coverage
 
 This implementation satisfies all required features:
 
-- Mountable filesystem (`./memfs [mount point]`)
+- Mountable filesystem (`./build/memfs [mount point]`)
 - Flat directory structure (root-level files/directories)
 - Hierarchical directory structure
 - File read / write / append
@@ -117,7 +134,7 @@ The filesystem uses a simple **log-based persistence mechanism**:
 - On startup, the log is replayed
 - The filesystem state is reconstructed in memory
 
-This ensures recovery after crashes without storing full snapshots.
+This provides basic recovery without storing full snapshots. Large individual log records currently exceed the replay buffers and are listed as a known limitation below.
 
 ---
 
@@ -133,8 +150,21 @@ This version contains detailed comments explaining the design and is intended fo
 
 ---
 
+## Limitations
+
+- The implementation is intended for small educational workloads rather than production use.
+- Persistence uses a simple fixed-buffer text log.
+- Paths and log records use fixed-size text fields.
+- Removal and truncation operations are not implemented.
+
+## Troubleshooting
+
+- Verify `/dev/fuse` permissions when mounting fails with `Operation not permitted`.
+- Install the FUSE 2.x development package if `fuse.h` or `-lfuse` is missing.
+- Always unmount with `fusermount -u` before deleting or reusing the mount directory.
+
 ## Notes
 
 - Maximum filename length: 255 characters
-- Arbitrary file sizes supported
+- File data can grow dynamically in memory, but persistence replay is currently limited by fixed log buffers
 - No performance optimizations (focus on correctness and clarity)

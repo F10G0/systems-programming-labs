@@ -1,5 +1,5 @@
 LLVM_DIR ?= /usr/lib/llvm-16
-BUILD_DIR := build
+BUILD_DIR ?= ../build/dead-code-elimination
 
 .PHONY: all clean
 
@@ -11,5 +11,4 @@ all:
 	cmake --build $(BUILD_DIR)
 
 clean:
-	rm -rf $(BUILD_DIR)
-	
+	$(RM) -r $(BUILD_DIR)

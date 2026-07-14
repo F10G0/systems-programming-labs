@@ -1,4 +1,6 @@
-# Task03 - Shell Pipeline and Process Management
+# Task 03 — Shell Pipeline and Process Management
+
+## Overview
 
 A small Unix-like shell implementation focused on process creation, pipelines, redirection, and basic job control.
 
@@ -16,6 +18,12 @@ This project demonstrates how shells coordinate multiple processes using `fork`,
   - `exit`
   - `wait`
   - `kill`
+
+## Requirements
+
+- Linux or another environment providing the required POSIX process APIs
+- GNU Make and a C compiler
+- Flex, Bison, and the Flex runtime library (`libfl`)
 - Parser-based command processing using Flex and Bison
 
 ---
@@ -35,43 +43,34 @@ The shell is structured into two main components:
 ## Repository Structure
 
 ```text
-.
+task03-processes/
+├── Makefile
+├── README.md
 ├── src/
 │   ├── execute.c
 │   └── main.c
-│
-├── parser/
+└── parser/
 │   ├── parse.h
 │   ├── parse.y
 │   └── scan.l
-│
-├── Makefile
-└── README.md
 ```
 
 ---
 
 ## Build
 
-Requirements:
-
-- `flex`
-- `bison`
-
-Build:
-
 ```bash
-make
+make -C task03-processes
 ```
 
----
+The build generates parser sources under `task03-processes/build/generated/` and the executable `task03-processes/build/shell`.
 
 ## Usage
 
 Run the shell:
 
 ```bash
-./shell
+./build/shell
 ```
 
 Example commands:
@@ -96,6 +95,12 @@ kill 1234
 
 exit
 exit 1
+```
+
+## Cleanup
+
+```bash
+make -C task03-processes clean
 ```
 
 ---
@@ -188,14 +193,23 @@ Implemented by me:
 
 ---
 
-## Notes
+## Limitations
 
-- Target platform: Linux / POSIX systems
-- Uses Unix process management primitives directly
-- Focused on correctness and process control concepts rather than advanced shell features
 - No support for:
   - quoting rules beyond the provided parser
   - environment variable expansion
   - job control (`fg`, `bg`)
   - signal forwarding
-  
+- The lexer supports only the documented restricted character and quoting rules.
+- Background children are reaped only when the user invokes `wait`.
+
+## Troubleshooting
+
+- Install Flex, Bison, and `libfl` if parser generation or final linking fails.
+- Use the documented limited syntax; unsupported characters may be discarded rather than diagnosed.
+
+## Notes
+
+- Target platform: Linux / POSIX systems
+- Uses Unix process management primitives directly
+- Focused on correctness and process control concepts rather than advanced shell features

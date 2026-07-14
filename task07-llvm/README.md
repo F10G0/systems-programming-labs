@@ -1,4 +1,4 @@
-# Task07 – LLVM Passes
+# Task 07 — LLVM Passes
 
 ## Overview
 
@@ -18,21 +18,40 @@ The memory safety pass instruments heap and stack operations to detect:
 
 ---
 
-## Structure
+## Requirements
+
+- Linux x86-64
+- LLVM 16
+- Clang 16
+- CMake 3.18 or newer
+- Ninja
+- A C++17-compatible compiler
+
+The default LLVM installation path is:
 
 ```text
-.
+/usr/lib/llvm-16
+```
+
+---
+
+## Repository Structure
+
+```text
+task07-llvm/
 ├── Makefile
 ├── README.md
 ├── dead-code-elimination/
 │   ├── CMakeLists.txt
-│   ├── DeadCodeElimination.cpp
-│   └── Makefile
+│   ├── Makefile
+│   └── src/
+│       └── DeadCodeElimination.cpp
 └── memory-safety/
     ├── CMakeLists.txt
     ├── Makefile
-    ├── MemorySafety.cpp
-    └── MemorySafetyRuntime.cpp
+    └── src/
+        ├── MemorySafety.cpp
+        └── MemorySafetyRuntime.cpp
 ```
 
 ---
@@ -105,60 +124,43 @@ memory-safety
 
 ---
 
-## Requirements
-
-- Linux x86-64
-- LLVM 16
-- Clang 16
-- CMake 3.18 or newer
-- Ninja
-- A C++17-compatible compiler
-
-The default LLVM installation path is:
-
-```text
-/usr/lib/llvm-16
-```
-
----
-
 ## Build
 
-Build both passes:
+Build both passes from the repository root:
 
 ```bash
-make
+make -C task07-llvm
 ```
 
 Build only the dead code elimination pass:
 
 ```bash
-make dce
+make -C task07-llvm dce
 ```
 
 Build only the memory safety pass and runtime:
 
 ```bash
-make memory-safety
+make -C task07-llvm memory-safety
 ```
 
 Remove all generated build files:
 
 ```bash
-make clean
+make -C task07-llvm clean
 ```
 
 The generated libraries are located at:
 
 ```text
-dead-code-elimination/build/libDeadCodeElimination.so
-memory-safety/build/libMemorySafety.so
-memory-safety/build/libMemorySafetyRuntime.a
+task07-llvm/build/dead-code-elimination/libDeadCodeElimination.so
+task07-llvm/build/memory-safety/libMemorySafety.so
+task07-llvm/build/memory-safety/libMemorySafetyRuntime.a
 ```
 
----
-
 ## Usage
+
+The following commands assume `task07-llvm` is the working directory.
 
 Compile a C source file to LLVM IR:
 
@@ -174,7 +176,7 @@ Run the dead code elimination pass:
 
 ```bash
 opt-16 \
-    -load-pass-plugin dead-code-elimination/build/libDeadCodeElimination.so \
+    -load-pass-plugin build/dead-code-elimination/libDeadCodeElimination.so \
     -passes=dead-code-elimination \
     -S input.ll -o optimized.ll
 ```
@@ -185,7 +187,7 @@ Instrument the LLVM IR:
 
 ```bash
 opt-16 \
-    -load-pass-plugin memory-safety/build/libMemorySafety.so \
+    -load-pass-plugin build/memory-safety/libMemorySafety.so \
     -passes=memory-safety \
     -S input.ll -o instrumented.ll
 ```
@@ -194,7 +196,7 @@ Link the instrumented program with the runtime library:
 
 ```bash
 clang++-16 instrumented.ll \
-    memory-safety/build/libMemorySafetyRuntime.a \
+    build/memory-safety/libMemorySafetyRuntime.a \
     -o instrumented
 ```
 
@@ -209,6 +211,24 @@ Invalid memory operations terminate the program and print:
 ```text
 Illegal memory access
 ```
+
+## Cleanup
+
+```bash
+make -C task07-llvm clean
+```
+
+## Limitations
+
+- The passes focus on the assignment's local transformations rather than full LLVM optimization coverage.
+- Heap instrumentation targets direct calls to `malloc` and `free`.
+- The memory runtime uses a 16-byte red zone and a process-wide allocation map.
+- The runtime is an educational implementation and is not a replacement for AddressSanitizer.
+
+## Troubleshooting
+
+- Confirm `clang-16`, `opt-16`, CMake, and Ninja are installed and that `/usr/lib/llvm-16` contains LLVM's CMake package.
+- Missing optional zstd or CURL components do not prevent these plugin targets from building.
 
 ---
 
